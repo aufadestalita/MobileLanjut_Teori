@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'OSAMAKOM 2026',
       theme: ThemeData(
-        fontFamily: 'Roboto', // Idealnya gunakan GoogleFonts.poppins() jika ada package-nya
+        fontFamily: 'Roboto',
       ),
       home: const MainScreen(),
     );
@@ -26,12 +26,10 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA), // Warna background abu sangat muda
+      backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
-          // Header / Navbar (Meniru bagian atas di video)
           _buildNavbar(),
-          // Konten Utama yang bisa di-scroll
           const Expanded(
             child: SingleChildScrollView(
               child: CompetitionSection(),
@@ -42,30 +40,41 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  // Widget untuk membuat Top Navigation Bar
   Widget _buildNavbar() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-      color: Colors.white,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: Colors.grey.shade200, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 16,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Logo & Title
           Row(
             children: [
-              const Icon(Icons.school, color: Colors.blue, size: 30),
+              const Icon(Icons.school, color: Color(0xFF1E266D), size: 28),
               const SizedBox(width: 10),
               const Text(
                 'OSAMAKOM 2026',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E266D),
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
           ),
-          // Menu Links
           Row(
             children: [
               _navItem('Beranda'),
@@ -76,25 +85,37 @@ class MainScreen extends StatelessWidget {
               _navItem('Hadiah'),
             ],
           ),
-          // Action Buttons
           Row(
             children: [
               TextButton.icon(
                 onPressed: () {},
-                icon: const Icon(Icons.search, size: 18, color: Colors.black87),
-                label: const Text('Cek Status', style: TextStyle(color: Colors.black87)),
+                icon: const Icon(Icons.search, size: 18, color: Color(0xFF1E266D)),
+                label: const Text(
+                  'Cek Status',
+                  style: TextStyle(
+                    color: Color(0xFF1E266D),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1E266D),
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 ),
-                child: const Text('Daftar', style: TextStyle(color: Colors.white)),
+                child: const Text(
+                  'Daftar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           )
@@ -105,7 +126,7 @@ class MainScreen extends StatelessWidget {
 
   Widget _navItem(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Text(
         title,
         style: const TextStyle(
@@ -118,8 +139,6 @@ class MainScreen extends StatelessWidget {
   }
 }
 
-// Bagian Kartu Kompetisi (Stateful agar interaktif)
-// Bagian Kartu Kompetisi
 class CompetitionSection extends StatefulWidget {
   const CompetitionSection({Key? key}) : super(key: key);
 
@@ -128,8 +147,7 @@ class CompetitionSection extends StatefulWidget {
 }
 
 class _CompetitionSectionState extends State<CompetitionSection> {
-  // Fisika (index 2) menyala secara default saat web pertama kali dibuka
-  int selectedIndex = 2; 
+  int selectedIndex = 2;
 
   final List<Map<String, dynamic>> competitions = [
     {
@@ -191,7 +209,6 @@ class _CompetitionSectionState extends State<CompetitionSection> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 50),
-          
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -207,17 +224,13 @@ class _CompetitionSectionState extends State<CompetitionSection> {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
-                    // PERUBAHAN UTAMA: State berubah begitu kursor menyentuh kartu (hover)
                     onEnter: (_) {
                       setState(() {
                         selectedIndex = index;
                       });
                     },
-                    // GestureDetector tetap bisa dipertahankan jika kartu ini nantinya punya fungsi navigasi URL saat diklik
                     child: GestureDetector(
-                      onTap: () {
-                        // Logika navigasi ke halaman pendaftaran ditaruh di sini nantinya
-                      },
+                      onTap: () {},
                       child: _buildCompetitionCard(data, isSelected),
                     ),
                   ),
@@ -229,14 +242,13 @@ class _CompetitionSectionState extends State<CompetitionSection> {
       ),
     );
   }
-
+// Animasi, State & Integrasi
   Widget _buildCompetitionCard(Map<String, dynamic> data, bool isSelected) {
     Color themeColor = data['color'];
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOutCubic,
-      // Sedikit membesar saat terpilih, sama seperti efek di video
       transform: Matrix4.identity()..scale(isSelected ? 1.02 : 1.0),
       width: 230,
       height: 300,
